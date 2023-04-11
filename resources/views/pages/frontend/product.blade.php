@@ -87,7 +87,7 @@
                                     </div>
                                 @else
                                     <div class="cart_add">
-                                        <a href="#" class="order" data-data="{{ $item }}">Đặt hàng</a>
+                                        <a href="{{ route('frontend.productDetail',['id'=>$item->id])}}" class="order" data-data="{{ $item }}">Đặt hàng</a>
                                     </div>
                                 @endif
                             </div>
@@ -109,9 +109,9 @@
         </div>
     </section>
     <!-- Shop Section End -->
-    @include('pages.frontend.modal')
+    {{-- @include('pages.frontend.modal') --}}
 @endsection
-@push('jscustom')
+{{-- @push('jscustom')
     <script>
         $(document).ready(function() {
             $('.order').click(function(e) {
@@ -130,4 +130,4 @@
             $
         });
     </script>
-@endpush
+@endpush --}}

@@ -59,6 +59,7 @@ route::get('checkout',[App\Http\Controllers\Frontend\CartController::class,'getC
 // route::post('checkout/{id}',[App\Http\Controllers\Frontend\CartController::class,'postCheckout'])->name('cart.post');
 Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class, 'index'])->name('home');
 route::get('search',[FrontendController::class,'getSearch'])->name('frontend.search');
+route::get('/product/{id}',[FrontendController::class,'getProductDetail'])->name('frontend.productDetail');
 route::group(['middleware' => CheckLogin::class],function(){
     Route::get('/home/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'recommend'])->name('home.recommend');
 });

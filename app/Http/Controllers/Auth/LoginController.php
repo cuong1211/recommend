@@ -23,7 +23,7 @@ class LoginController extends Controller
                 return redirect('/login');
             }
         } else {
-            return view('pages.auth.login');
+            return view('auth.login');
         }
     }
     public function postLogin(Request $request)
@@ -40,7 +40,7 @@ class LoginController extends Controller
     }
     public function getLogout()
     {
-        User::where('id', Auth::user()->id)->update(['status' => 0]);
+     
         Auth::logout();
         return redirect('/login');
     }

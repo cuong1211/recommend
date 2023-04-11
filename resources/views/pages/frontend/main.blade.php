@@ -141,7 +141,7 @@
                                 <h6><a href="#">{{ $item->name }}</a></h6>
                                 <div class="product__item__price">{{ $item->price }}</div>
                                 <div class="cart_add">
-                                    <a href="#" class="order" data-data="{{$item}}">Đặt hàng</a>
+                                    <a href="{{route('frontend.productDetail',['id'=>$item->id])}}" class="order" data-data="{{$item}}">Đặt hàng</a>
                                 </div>
                             </div>
                         </div>
@@ -491,7 +491,7 @@
     @include('pages.frontend.modal')
 @endsection
 
-@push('jscustom')
+{{-- @push('jscustom')
     <script>
         $(document).ready(function() {
             $('.order').click(function(e) {
@@ -510,4 +510,4 @@
             $
         });
     </script>
-@endpush
+@endpush --}}

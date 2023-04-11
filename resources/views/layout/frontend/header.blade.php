@@ -18,7 +18,13 @@
                                         <li>ENG</li>
                                     </ul>
                                 </li> --}}
-                                <li><a href="{{route('login')}}">Sign in</a> <span class="arrow_carrot-down"></span></li>
+                                @if (Auth::check())
+                                    <li><a href="{{ route('logout') }}">Logout</a> <span class="arrow_carrot-down"></span>
+                                    </li>
+                                @else
+                                    <li><a href="{{ route('login') }}">Sign in</a> <span
+                                            class="arrow_carrot-down"></span></li>
+                                @endif
                             </ul>
                         </div>
                         <div class="header__logo">
@@ -26,7 +32,8 @@
                         </div>
                         <div class="header__top__right">
                             <div class="header__top__right__links">
-                                <a href="#" class="search-switch"><img src="img/icon/search.png" alt=""></a>
+                                <a href="#" class="search-switch"><img src="img/icon/search.png"
+                                        alt=""></a>
                                 {{-- <a href="#"><img src="img/icon/heart.png" alt=""></a> --}}
                             </div>
                             {{-- <div class="header__top__right__cart">

@@ -28,6 +28,7 @@ class FrontendController extends Controller
 
         return view('pages.frontend.main', compact('product'));
     }
+
     public function recommend($id)
     {
         $userId = $id;
@@ -57,11 +58,11 @@ class FrontendController extends Controller
 
         foreach ($items as $item) {
             if ($total[$item] != 0) {
-                $product_recom [$item] = $similarity[$item] / $total[$item];
+                $product_recom[$item] = $similarity[$item] / $total[$item];
             }
         }
 
-        arsort($product_recom );
+        arsort($product_recom);
         // dd($product_recom );
         $product = [];
         // dd($product_recom);
@@ -86,6 +87,45 @@ class FrontendController extends Controller
         $cate = Category::query()->get();
         $product = Product::query()->where('category_id', $id)->paginate(12);
         return view('pages.frontend.shop', compact('product', 'cate', 'product_search', 'search', 'id'));
+    }
+    public function getProductDetail($id)
+    {
+        $product = Product::findOrFail($id);
+        $userRatings = User_Product::where('product_id', $id)->get();
+        $similarItems = [];
+        foreach ($userRatings as $rating) {
+            $similarRatings = User_Product::where('user_id', $rating->user_id)
+                ->where('product_id', '!=', $id)
+                ->get();
+
+            foreach ($similarRatings as $similarRating) {
+                if (!array_key_exists($similarRating->product_id, $similarItems)) {
+                    $similarItems[$similarRating->product_id] = [
+                        'id' => $similarRating->product_id,
+                        'score' => 0,
+                        'count' => 0,
+                    ];
+                }
+
+                $similarItems[$similarRating->product_id]['score'] += $similarRating->rate;
+                $similarItems[$similarRating->product_id]['count']++;
+            }
+        }
+
+        foreach ($similarItems as $key => $item) {
+            $similarItems[$key]['score'] = $item['score'] / $item['count'];
+        }
+
+        uasort($similarItems, function ($a, $b) {
+            // dd($a, $b);
+            return $b['score'] - $a['score'];
+        });
+        // $similarItems contain information of item
+        foreach ($similarItems as $key => $item) {
+            $similarItems[$key] = Product::find($item['id']);
+        }
+        dd($similarItems, $product);
+        return view('pages.frontend.product-detail',compact('product','similarItems'));
     }
     public function getDetail(Request $request, $id)
     {
