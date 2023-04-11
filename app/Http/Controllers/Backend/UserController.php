@@ -147,7 +147,7 @@ class UserController extends Controller
         }
     }
     public function importRate(request $request){
-        dd($request->file);
+        // dd($request->file);
         $import = Excel::import(new RateImport, $request->file);
         // $class = Classes::query()->get();
         // foreach($class as $c)

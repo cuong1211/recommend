@@ -90,7 +90,8 @@ class FrontendController extends Controller
     }
     public function getProductDetail($id)
     {
-        $product = Product::findOrFail($id);
+        // $product_info = Product::findOrFail($id);
+        $product = Product::query()->where('id', $id)->with('category')->first();
         $userRatings = User_Product::where('product_id', $id)->get();
         $similarItems = [];
         foreach ($userRatings as $rating) {
@@ -122,9 +123,12 @@ class FrontendController extends Controller
         });
         // $similarItems contain information of item
         foreach ($similarItems as $key => $item) {
+            // find product by id and add category
             $similarItems[$key] = Product::find($item['id']);
+            //add category
+            $similarItems[$key]['category'] = $similarItems[$key]->category;
         }
-        dd($similarItems, $product);
+        // dd($similarItems, $product);
         return view('pages.frontend.product-detail',compact('product','similarItems'));
     }
     public function getDetail(Request $request, $id)
