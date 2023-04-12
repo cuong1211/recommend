@@ -13,7 +13,7 @@ class OrderService
 {
     public function index()
     {
-        $oder = Order::query()->with('product')->get();
+        $oder = Order::query()->with('product')->latest();
         return $oder;
     }
     public function create($data)
@@ -32,6 +32,7 @@ class OrderService
             'date' => $date,
             'total' => $data['total'],
             'status' => $data['status'],
+            'user_id' => $data['user_id'],
         ]);
         return $create;
     }

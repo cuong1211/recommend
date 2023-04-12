@@ -8,10 +8,18 @@
                         <div class="col-lg-8 col-md-6">
                             <h6 class="checkout__title">Chi tiết đơn hàng</h6>
                             <input type="hidden" name="product_id" value="{{ $product }}">
-
+                            @if ($user != null)
+                                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                            @else
+                                <input type="hidden" name="user_id" value="">
+                            @endif
                             <div class="checkout__input">
                                 <p>Họ và tên<span>*</span></p>
-                                <input type="text" name="name">
+                                @if ($user != null)
+                                    <input type="text" name="name" value="{{ $user->name }}">
+                                @else
+                                    <input type="text" name="name" value="">
+                                @endif  
                             </div>
                             <div class="checkout__input">
                                 <p>Địa chỉ<span>*</span></p>
@@ -27,7 +35,11 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="email" name="email">
+                                        @if ($user != null)
+                                            <input type="email" name="email" value="{{ $user->email }}">
+                                        @else
+                                            <input type="email" name="email" value="">
+                                        @endif
                                     </div>
                                 </div>
 
@@ -47,7 +59,8 @@
                                 </ul>
                                 <ul class="checkout__total__all">
                                     <li>Phí vận chuyển <span>50.000 VNĐ</span></li>
-                                    <li>Tổng tiền <span>{{ $total = $price * $quantity + 50000 }} VNĐ</span></li>
+                                    <li>Tổng tiền
+                                        <span>{{ number_format($total = $price * $quantity + 50000, 0, '.', '.') }} VNĐ</span></li>
                                 </ul>
                                 <input type="hidden" name="total" value="{{ $total }}">
                                 <input type="hidden" name="soluong" id="soluong" value="{{ $quantity }}">
@@ -63,6 +76,7 @@
 @endsection
 @push('jscustom')
     <script>
+
         //hiển thị thông báo
         $('#form_add_order').on('submit', function(e) {
             e.preventDefault();
@@ -92,26 +106,27 @@
 
                         // Add the child element to the parent element
                         parent.appendChild(child);
+                    }else{
+                        var child = document.createElement('p');
+                        child.textContent = "Đặt hàng không thành công";
+                        child.classList.add('alert', 'alert-dark');
+                        // Select the parent element based on its class name
+                        var parent = document.querySelector('.parent');
+    
+                        // Add the child element to the parent element
+                        parent.appendChild(child);
+    
+                        setTimeout(function() {
+    
+    
+                            const elementsToDelete = document.querySelectorAll(".alert");
+    
+                            // Loop through the NodeList and remove each element
+                            elementsToDelete.forEach((element) => {
+                                element.remove();
+                            });
+                        }, 1000)
                     }
-                    var child = document.createElement('p');
-                    child.textContent = "Đặt hàng không thành công";
-                    child.classList.add('alert', 'alert-dark');
-                    // Select the parent element based on its class name
-                    var parent = document.querySelector('.parent');
-
-                    // Add the child element to the parent element
-                    parent.appendChild(child);
-
-                    setTimeout(function() {
-
-
-                        const elementsToDelete = document.querySelectorAll(".alert");
-
-                        // Loop through the NodeList and remove each element
-                        elementsToDelete.forEach((element) => {
-                            element.remove();
-                        });
-                    }, 1000)
 
                 },
                 error: function(data) {

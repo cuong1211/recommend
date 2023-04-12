@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Services\Order\OrderService;
 use App\Models\in_product;
+use App\Models\Order;
 use Spatie\Searchable\Search;
 use App\Models\User_Product;
 use Illuminate\Support\Facades\Auth;
@@ -93,12 +94,12 @@ class FrontendController extends Controller
         // $product_info = Product::findOrFail($id);
         $product = Product::query()->where('id', $id)->with('category')->first();
         $userRatings = User_Product::where('product_id', $id)->get();
+        // dd($userRatings);
         $similarItems = [];
         foreach ($userRatings as $rating) {
             $similarRatings = User_Product::where('user_id', $rating->user_id)
                 ->where('product_id', '!=', $id)
                 ->get();
-
             foreach ($similarRatings as $similarRating) {
                 if (!array_key_exists($similarRating->product_id, $similarItems)) {
                     $similarItems[$similarRating->product_id] = [
@@ -107,12 +108,11 @@ class FrontendController extends Controller
                         'count' => 0,
                     ];
                 }
-
                 $similarItems[$similarRating->product_id]['score'] += $similarRating->rate;
                 $similarItems[$similarRating->product_id]['count']++;
             }
         }
-
+        // dd($similarItems);
         foreach ($similarItems as $key => $item) {
             $similarItems[$key]['score'] = $item['score'] / $item['count'];
         }
@@ -129,7 +129,7 @@ class FrontendController extends Controller
             $similarItems[$key]['category'] = $similarItems[$key]->category;
         }
         // dd($similarItems, $product);
-        return view('pages.frontend.product-detail',compact('product','similarItems'));
+        return view('pages.frontend.product-detail', compact('product', 'similarItems'));
     }
     public function getDetail(Request $request, $id)
     {
@@ -145,5 +145,31 @@ class FrontendController extends Controller
             ->where('name', 'LIKE', "%{$search}%")
             ->paginate(12);
         return view('pages.frontend.product', compact('product_search'));
+    }
+    public function getOrder($id)
+    {
+        $order = Order::where('user_id', $id)
+            ->where('status', 1)
+            ->whereNotIn('product_id', function ($query) use ($id) {
+                $query->select('product_id')
+                    ->from('user_product')
+                    ->where('user_id', $id);
+            })
+            ->with('product')
+            ->get();
+        return view('pages.frontend.order', compact('order'));
+    }
+    public function postRate(Request $request)
+    {
+        // dd($request->all());
+        $user_id = $request->user_id;
+        $product_id = $request->product_id;
+        $rate = $request->rate;
+        $user_rating = User_Product::create([
+            'user_id' => $user_id,
+            'product_id' => $product_id,
+            'rate' => $rate
+        ]);
+        return redirect()->back();
     }
 }

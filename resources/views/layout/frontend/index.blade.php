@@ -3,6 +3,7 @@
 
 <head>
     @include('layout.frontend.source')
+    @stack('csscustom')
 </head>
 
 <body>

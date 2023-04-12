@@ -55,30 +55,30 @@
                     return data;
                 }
             },
-            // {
-            //     data: 'status',
-            //     render: function(data, type, row, meta) {
-            //         var status = {
-            //             0: {
-            //                 'title': 'Đã hủy',
-            //                 'class': ' label-light-danger'
-            //             },
-            //             1: {
-            //                 'title': 'Đã xử lý',
-            //                 'class': ' label-light-success'
-            //             },
-            //             2: {
-            //                 'title': 'Đang xử lý',
-            //                 'class': 'label-light-primary'
-            //             },
-            //         };
-            //         if (typeof status[data] === 'undefined') {
-            //             return data;
-            //         }
-            //         return '<span class="label label-lg font-weight-bold' + status[data].class +
-            //             ' label-inline">' + status[data].title + '</span>';
-            //     }
-            // },
+            {
+                data: 'status',
+                render: function(data, type, row, meta) {
+                    var status = {
+                        0: {
+                            'title': 'Đã hủy',
+                            'class': ' label-light-danger'
+                        },
+                        1: {
+                            'title': 'Đã xử lý',
+                            'class': ' label-light-success'
+                        },
+                        2: {
+                            'title': 'Đang xử lý',
+                            'class': 'label-light-primary'
+                        },
+                    };
+                    if (typeof status[data] === 'undefined') {
+                        return data;
+                    }
+                    return '<span class="label label-lg font-weight-bold' + status[data].class +
+                        ' label-inline">' + status[data].title + '</span>';
+                }
+            },
             {
                 data: null,
                 className: 'text-end',

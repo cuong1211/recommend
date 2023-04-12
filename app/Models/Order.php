@@ -19,6 +19,7 @@ class Order extends Model
         'date',
         'total',
         'status',
+        'user_id'
     ];
     protected $dates = ['created_at', 'updated_at'];
     public function product()

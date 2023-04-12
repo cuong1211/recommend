@@ -63,5 +63,6 @@ route::get('/product/{id}',[FrontendController::class,'getProductDetail'])->name
 route::group(['middleware' => CheckLogin::class],function(){
     Route::get('/home/{id}', [App\Http\Controllers\Frontend\FrontendController::class, 'recommend'])->name('home.recommend');
 });
-
+route::get('/order/{id}',[FrontendController::class,'getOrder'])->name('frontend.order');
+route::post('/rate',[FrontendController::class,'postRate'])->name('frontend.rate');
 // route::post('/Order',[FrontendController::class,'postOrder'])->name('order.post');

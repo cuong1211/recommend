@@ -39,6 +39,9 @@ class OrderRequest extends FormRequest
                         'soluong' => 'nullable|numeric',
                         'total' => 'nullable',
                         'status' => 'nullable',
+                        'user_id' => 'nullable',
+
+
                     ];
                 }
             case 'update': {
@@ -52,6 +55,7 @@ class OrderRequest extends FormRequest
                         'soluong' => 'nullable|numeric',
                         'total' => 'nullable',
                         'status' => 'nullable',
+                        'user_id' => 'nullable',
                     ];
                 }
             default:

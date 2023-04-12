@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Gloudemans\Shoppingcart\Cart;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -34,11 +35,16 @@ class CartController extends Controller
     }
     public function getCheckout(Request $request){
         // dd($request->all());
+        if(Auth::check()){
+            $user = Auth::user();
+        }else{
+            $user = null;
+        }
         $name= $request['name-product'];
         $price = $request['price-product'];
         $quantity = $request['quantity-product'];
         $size= $request['size-product'];
         $product = Product::find($request['id-product'])->id;
-        return view('pages.frontend.checkout',compact('name','price','quantity','size','product'));
+        return view('pages.frontend.checkout',compact('name','price','quantity','size','product','user'));
     }
 }

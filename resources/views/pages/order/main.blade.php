@@ -89,7 +89,7 @@
                                     <th class="min-w-125px">Địa chỉ</th>
                                     <th class="min-w-125px">Sản phẩm</th>
                                     <th class="min-w-125px">Tổng tiền</th>
-                                    {{-- <th class="min-w-125px">Trang thái</th> --}}
+                                    <th class="min-w-125px">Trang thái</th>
                                     <th class="text-end min-w-70px"></th>
                                 </tr>
                                 <!--end::Table row-->

@@ -35,18 +35,24 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="product__details__text">
+
                         <div class="product__label">{{ $product->category->name }}</div>
                         <h4>{{ $product->name }}</h4>
                         <h5>{{ $product->price }} VNĐ</h5>
                         <p>{{ $product->description }}</p>
                         <div class="product__details__option">
-                            <div class="quantity">
-                                <div class="pro-qty">
-                                    <input type="text" value="1">
+                            <form action="{{ route('cart.checkout') }}" method="GET">
+                                @csrf
+                                <div class="quantity">
+                                    <div class="pro-qty">
+                                        <input type="text" name="quantity-product" value="1">
+                                    </div>
                                 </div>
-                            </div>
-                            <a href="#" class="primary-btn">Đặt hàng</a>
-                            <a href="#" class="heart__btn"><span class="icon_heart_alt"></span></a>
+                                <input type="hidden" name="id-product" value="{{ $product->id }}">
+                                <input type="hidden" name="name-product" value="{{ $product->name }}">
+                                <input type="hidden" name="price-product" value="{{ $product->price }}">
+                                <button type="submit" class="primary-btn">Đặt hàng</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -119,16 +125,16 @@
                     @foreach ($similarItems as $item)
                         <div class="col-lg-3">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="{{route('image',['id'=>$item->img])}}">
+                                <div class="product__item__pic set-bg" data-setbg="{{ route('image', ['id' => $item->img]) }}">
                                     <div class="product__label">
-                                        <span>{{$item->category->name}}</span>
+                                        <span>{{ $item->category->name }}</span>
                                     </div>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a href="#">{{$item->name}}</a></h6>
-                                    <div class="product__item__price">{{$item->price}}</div>
+                                    <h6><a href="#">{{ $item->name }}</a></h6>
+                                    <div class="product__item__price">{{ $item->price }}</div>
                                     <div class="cart_add">
-                                        <a href="#">Add to cart</a>
+                                        <a href="#">Đặt hàng</a>
                                     </div>
                                 </div>
                             </div>

@@ -36,10 +36,9 @@
                                         alt=""></a>
                                 {{-- <a href="#"><img src="img/icon/heart.png" alt=""></a> --}}
                             </div>
-                            {{-- <div class="header__top__right__cart">
-                                <a href="#"><img src="img/icon/cart.png" alt=""> <span>0</span></a>
-                                <div class="cart__price">Cart: <span>$0.00</span></div>
-                            </div> --}}
+                            <div class="header__top__right__cart">
+                                <a href="{{route('frontend.order',['id'=>Auth::user()->id])}}"><img src="img/icon/cart.png" alt=""></a>
+                            </div>
                         </div>
                     </div>
                 </div>
