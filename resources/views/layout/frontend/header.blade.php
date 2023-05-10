@@ -36,9 +36,13 @@
                                         alt=""></a>
                                 {{-- <a href="#"><img src="img/icon/heart.png" alt=""></a> --}}
                             </div>
-                            <div class="header__top__right__cart">
-                                <a href="{{route('frontend.order',['id'=>Auth::user()->id])}}"><img src="img/icon/cart.png" alt=""></a>
-                            </div>
+                            @if (Auth::check())
+                                <div class="header__top__right__cart">
+                                    <a href="{{ route('frontend.order', ['id' => Auth::user()->id]) }}"><img
+                                            src="img/icon/cart.png" alt=""></a>
+                                </div>
+                            @else
+                            @endif
                         </div>
                     </div>
                 </div>
