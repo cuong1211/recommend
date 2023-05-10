@@ -13,7 +13,7 @@
             <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="footer__about">
                     <div class="footer__logo">
-                        <a href="#"><img src="img/logo_asus.png" alt=""></a>
+                        <a href="#"><img src="img/logo.png" alt=""></a>
                     </div>
                     <p>Đẹp sảng chảnh</p>
                     <p>Ngời khí chất</p>

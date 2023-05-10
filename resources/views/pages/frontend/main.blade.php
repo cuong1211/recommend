@@ -139,7 +139,7 @@
                             </div>
                             <div class="product__item__text">
                                 <h6><a href="#">{{ $item->name }}</a></h6>
-                                <div class="product__item__price">{{ $item->price }}</div>
+                                <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }} VNĐ</div>
                                 <div class="cart_add">
                                     <a href="{{route('frontend.productDetail',['id'=>$item->id])}}" class="order" data-data="{{$item}}">Đặt hàng</a>
                                 </div>

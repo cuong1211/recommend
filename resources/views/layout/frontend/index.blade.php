@@ -8,9 +8,6 @@
 
 <body>
     <!-- Page Preloder -->
-    <div id="preloder">
-        <div class="loader"></div>
-    </div>
     <div class="parent">
         <!-- Existing content of parent div -->
       </div>

@@ -38,7 +38,8 @@
 
                         <div class="product__label">{{ $product->category->name }}</div>
                         <h4>{{ $product->name }}</h4>
-                        <h5>{{ $product->price }} VNĐ</h5>
+                        <h5>Mã số: {{ $product->id }}</h5>
+                        <h5>{{ number_format($product->price, 0, '.', '.') }} VNĐ</h5>
                         <p>{{ $product->description }}</p>
                         <div class="product__details__option">
                             <form action="{{ route('cart.checkout') }}" method="GET">
@@ -132,7 +133,8 @@
                                 </div>
                                 <div class="product__item__text">
                                     <h6><a href="#">{{ $item->name }}</a></h6>
-                                    <div class="product__item__price">{{ $item->price }}</div>
+                                    <h5>Mã số: {{ $item->id }}</h5>
+                                    <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }} VNĐ</div>
                                     <div class="cart_add">
                                         <a href="#">Đặt hàng</a>
                                     </div>

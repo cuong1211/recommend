@@ -157,6 +157,7 @@ class FrontendController extends Controller
             })
             ->with('product')
             ->get();
+        // dd($order);
         return view('pages.frontend.order', compact('order'));
     }
     public function postRate(Request $request)

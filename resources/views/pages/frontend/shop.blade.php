@@ -78,7 +78,7 @@
                             </div>
                             <div class="product__item__text">
                                 <h6>{{ $item->name }}</h6>
-                                <div class="product__item__price">{{ $item->price }} VNĐ</div>
+                                <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }} VNĐ</div>
                                 @if (App\models\in_product::where('product_id', $item->id)->sum('quantity') == 0)
                                     <div class="cart_add">
                                         <div data-data="{{ $item }}" disabled>Hết

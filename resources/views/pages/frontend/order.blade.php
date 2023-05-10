@@ -95,7 +95,7 @@
                                             </div>
                                         </td>
                                         <td class="cart__price">{{ $item->quantity }}</td>
-                                        <td class="cart__stock">{{ $item->total }} VNĐ</td>
+                                        <td class="cart__stock">{{ number_format($item->total, 0, '.', '.') }} VNĐ</td>
                                         <form action="{{route('frontend.rate')}}" method="POST">
                                             @csrf
                                             <input type="hidden" name="product_id" value="{{$item->product_id}}">
