@@ -13,6 +13,8 @@ use App\Models\Order;
 use Spatie\Searchable\Search;
 use App\Models\User_Product;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class FrontendController extends Controller
 {
@@ -23,11 +25,16 @@ class FrontendController extends Controller
     }
     public function index()
     {
+        $topProducts = Product::select('products.id', 'products.name', 'products.price', 'products.img', DB::raw('COUNT(orders.id) AS total_orders'))
+            ->leftJoin('orders', 'orders.product_id', '=', 'products.id')
+            ->groupBy('products.id', 'products.name', 'products.price', 'products.img')
+            ->orderByDesc('total_orders')
+            ->limit(12)
+            ->get();
 
         $product = Product::offset(0)->limit(12)->get();
-        // dd($product);
-
-        return view('pages.frontend.main', compact('product'));
+        // dd($topProducts);
+        return view('pages.frontend.main', compact('product', 'topProducts'));
     }
 
     public function recommend($id)
@@ -41,37 +48,81 @@ class FrontendController extends Controller
             $similarity[$item] = 0;
             $total[$item] = 0;
         }
-
         $userRatings = User_Product::where('user_id', $userId)->get();
+        if (count($userRatings) > 0) {
 
-        foreach ($userRatings as $userRating) {
-            $otherRatings = User_Product::where('product_id', $userRating->product_id)
-                ->where('user_id', '!=', $userId)
-                ->get();
+            foreach ($userRatings as $userRating) {
+                $otherRatings = User_Product::where('product_id', $userRating->product_id)
+                    ->where('user_id', '!=', $userId)
+                    ->get();
 
-            foreach ($otherRatings as $otherRating) {
-                $similarity[$otherRating->product_id] += $otherRating->rate * $userRating->rate;
-                $total[$otherRating->product_id] += $userRating->rate;
+                foreach ($otherRatings as $otherRating) {
+                    $similarity[$otherRating->product_id] += $otherRating->rate * $userRating->rate;
+                    $total[$otherRating->product_id] += $userRating->rate;
+                }
             }
-        }
 
-        $product_recom  = array();
+            $product_recom  = array();
 
-        foreach ($items as $item) {
-            if ($total[$item] != 0) {
-                $product_recom[$item] = $similarity[$item] / $total[$item];
+            foreach ($items as $item) {
+                if ($total[$item] != 0) {
+                    $product_recom[$item] = $similarity[$item] / $total[$item];
+                }
             }
-        }
 
-        arsort($product_recom);
-        // dd($product_recom );
-        $product = [];
-        // dd($product_recom);
-        foreach ($product_recom  as $key => $value) {
-            $product[] = Product::find($key);
+            arsort($product_recom);
+            // dd($product_recom );
+            $product = [];
+            // dd($product_recom);
+            foreach ($product_recom  as $key => $value) {
+                $product[] = Product::find($key);
+            }
+            // dd($product);
+        } else {
+            $items = User_Product::select('product_id')->distinct()->get()->pluck('product_id');
+            $similarity = array();
+            $total = array();
+
+            foreach ($items as $item) {
+                $similarity[$item] = 0;
+                $total[$item] = 0;
+            }
+
+            $userRatings = User_Product::all();
+
+            foreach ($userRatings as $userRating) {
+                $otherRatings = User_Product::where('product_id', $userRating->product_id)
+                    ->where('user_id', '!=', $userRating->user_id)
+                    ->get();
+
+                foreach ($otherRatings as $otherRating) {
+                    $similarity[$otherRating->product_id] += $otherRating->rate * $userRating->rate;
+                    $total[$otherRating->product_id] += $userRating->rate;
+                }
+            }
+
+            $product_recom = array();
+
+            foreach ($items as $item) {
+                if ($total[$item] != 0) {
+                    $product_recom[$item] = $similarity[$item] / $total[$item];
+                }
+            }
+
+            arsort($product_recom);
+            $recommendations = array_slice($product_recom, 0, 12, true);
+            $productIds = array_keys($recommendations);
+            $product = Product::whereIn('id', $productIds)->get();
         }
-        // dd($product);
-        return view('pages.frontend.main', compact('product'));
+        $topProducts = Product::select('products.id', 'products.name','products.price','products.img', DB::raw('COUNT(orders.id) AS total_orders'))
+            ->leftJoin('orders', 'orders.product_id', '=', 'products.id')
+            ->groupBy('products.id', 'products.name','products.price','products.img')
+            ->orderByDesc('total_orders')
+            ->limit(12)
+            ->get();
+        $all_product = Product::offset(0)->limit(12)->get();
+
+        return view('pages.frontend.main', compact('product', 'topProducts','all_product'));
     }
     public function getProduct(Request $request, $id)
     {
@@ -112,15 +163,15 @@ class FrontendController extends Controller
                 $similarItems[$similarRating->product_id]['count']++;
             }
         }
-        // dd($similarItems);
         foreach ($similarItems as $key => $item) {
             $similarItems[$key]['score'] = $item['score'] / $item['count'];
         }
 
+        // dd($similarItems);
         uasort($similarItems, function ($a, $b) {
-            // dd($a, $b);
             return $b['score'] - $a['score'];
         });
+        $similarItems = array_slice($similarItems, 0, 5);
         // $similarItems contain information of item
         foreach ($similarItems as $key => $item) {
             // find product by id and add category
@@ -129,6 +180,7 @@ class FrontendController extends Controller
             $similarItems[$key]['category'] = $similarItems[$key]->category;
         }
         // dd($similarItems, $product);
+
         return view('pages.frontend.product-detail', compact('product', 'similarItems'));
     }
     public function getDetail(Request $request, $id)

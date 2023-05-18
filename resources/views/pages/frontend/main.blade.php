@@ -3,11 +3,11 @@
 @section('content')
     <!-- Hero Section Begin -->
     @if (session('notification'))
-    <div class="alert alert-success">
-        {{ session('notification') }}
-    </div>
-@endif
-{{-- <h1>{{Auth::user()->name}}</h1> --}}
+        <div class="alert alert-success">
+            {{ session('notification') }}
+        </div>
+    @endif
+    {{-- <h1>{{Auth::user()->name}}</h1> --}}
     <section class="hero">
         <div class="hero__slider owl-carousel">
             <div class="hero__item set-bg" data-setbg="img/hero/hero-1.jpg">
@@ -16,7 +16,7 @@
                         <div class="col-lg-8">
                             <div class="hero__text">
                                 <h2>Sản phẩm chất lượng</h2>
-                                <a href="{{route('home')}}" class="primary-btn">Cửa hàng chúng tôi</a>
+                                <a href="{{ route('home') }}" class="primary-btn">Cửa hàng chúng tôi</a>
                             </div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                         <div class="col-lg-8">
                             <div class="hero__text">
                                 <h2>Chính hãng</h2>
-                                <a href="{{route('home')}}" class="primary-btn">Cửa hàng chúng tôi</a>
+                                <a href="{{ route('home') }}" class="primary-btn">Cửa hàng chúng tôi</a>
                             </div>
                         </div>
                     </div>
@@ -131,24 +131,133 @@
     <!-- Product Section Begin -->
     <section class="product spad">
         <div class="container">
-            <div class="row">
-                @foreach ($product as $item)
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <div class="product__item__pic set-bg" data-setbg="{{ route('image', ['id' => $item->img]) }}">
-                            </div>
-                            <div class="product__item__text">
-                                <h6><a href="#">{{ $item->name }}</a></h6>
-                                <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }} VNĐ</div>
-                                <div class="cart_add">
-                                    <a href="{{route('frontend.productDetail',['id'=>$item->id])}}" class="order" data-data="{{$item}}">Đặt hàng</a>
+            @if (Auth::check())
+                <div class="breadcrumb__text">
+                    <h2>Các sản phẩm dành cho bạn</h2>
+                </div>
+                <div class="row">
+                    @foreach ($product as $item)
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg"
+                                    data-setbg="{{ route('image', ['id' => $item->img]) }}">
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">{{ $item->name }}</a></h6>
+                                    <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }} VNĐ
+                                    </div>
+                                    <div class="cart_add">
+                                        <a href="{{ route('frontend.productDetail', ['id' => $item->id]) }}" class="order"
+                                            data-data="{{ $item }}">Đặt hàng</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    @endforeach
+                </div>
+                <div class="breadcrumb__text">
+                    <h2>Các sản phẩm bán chạy</h2>
+                </div>
+                <div class="row">
+                    <div class="related__products__slider owl-carousel">
+                        @foreach ($topProducts as $item)
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg"
+                                        data-setbg="{{ route('image', ['id' => $item->img]) }}">
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6><a href="#">{{ $item->name }}</a></h6>
+                                        <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }}
+                                            VNĐ
+                                        </div>
+                                        <div class="cart_add">
+                                            <a href="{{ route('frontend.productDetail', ['id' => $item->id]) }}"
+                                                class="order" data-data="{{ $item }}">Đặt hàng</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
-                @endforeach
-
-            </div>
+                </div>
+                <div class="breadcrumb__text">
+                    <h2>Tất cả sản phẩm của chúng tôi</h2>
+                </div>
+                <div class="row">
+                    <div class="related__products__slider owl-carousel">
+                        @foreach ($all_product as $item)
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg"
+                                        data-setbg="{{ route('image', ['id' => $item->img]) }}">
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6><a href="#">{{ $item->name }}</a></h6>
+                                        <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }}
+                                            VNĐ
+                                        </div>
+                                        <div class="cart_add">
+                                            <a href="{{ route('frontend.productDetail', ['id' => $item->id]) }}"
+                                                class="order" data-data="{{ $item }}">Đặt hàng</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <div class="breadcrumb__text">
+                    <h2>Các sản phẩm bán chạy</h2>
+                </div>
+                <div class="row">
+                    @foreach ($topProducts as $item)
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg"
+                                    data-setbg="{{ route('image', ['id' => $item->img]) }}">
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">{{ $item->name }}</a></h6>
+                                    <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }} VNĐ
+                                    </div>
+                                    <div class="cart_add">
+                                        <a href="{{ route('frontend.productDetail', ['id' => $item->id]) }}" class="order"
+                                            data-data="{{ $item }}">Đặt hàng</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="breadcrumb__text">
+                    <h2>Tất cả sản phẩm của chúng tôi</h2>
+                </div>
+                <div class="row">
+                    <div class="related__products__slider owl-carousel">
+                        @foreach ($product as $item)
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg"
+                                        data-setbg="{{ route('image', ['id' => $item->img]) }}">
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6><a href="#">{{ $item->name }}</a></h6>
+                                        <div class="product__item__price">{{ number_format($item->price, 0, '.', '.') }}
+                                            VNĐ
+                                        </div>
+                                        <div class="cart_add">
+                                            <a href="{{ route('frontend.productDetail', ['id' => $item->id]) }}"
+                                                class="order" data-data="{{ $item }}">Đặt hàng</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </section>
     <!-- Product Section End -->
